@@ -34,32 +34,29 @@ public class DepDataSynchronizerXmlImpl implements DataSynchronizer {
             synchronization(dbData, xmlData);
 
             logger.info("Data synchronization completed successfully.");
-        } catch (Exception e) {
-            logger.error("Data synchronization error: " + e.getMessage(), e);
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            logger.info("Reading data from XML error: " + e.getMessage());
+            logger.error(String.valueOf(e));
         }
     }
 
-    private Set<DepData> readDataFromXML(String xmlFilePath) {
+    private Set<DepData> readDataFromXML(String xmlFilePath) throws ParserConfigurationException, IOException, SAXException {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document document = builder.parse(new File(xmlFilePath));
+
+        Element root = document.getDocumentElement();
+        NodeList depDataElements = root.getElementsByTagName("Row");
+
         Set<DepData> depDataSet = new HashSet<>();
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(new File(xmlFilePath));
+        for (int i = 0; i < depDataElements.getLength(); i++) {
+            Element depDataElement = (Element) depDataElements.item(i);
+            String depCode = depDataElement.getElementsByTagName("DepCode").item(0).getTextContent();
+            String depJob = depDataElement.getElementsByTagName("DepJob").item(0).getTextContent();
+            String description = depDataElement.getElementsByTagName("Description").item(0).getTextContent();
 
-            Element root = document.getDocumentElement();
-            NodeList depDataElements = root.getElementsByTagName("Row");
-
-            for (int i = 0; i < depDataElements.getLength(); i++) {
-                Element depDataElement = (Element) depDataElements.item(i);
-                String depCode = depDataElement.getElementsByTagName("DepCode").item(0).getTextContent();
-                String depJob = depDataElement.getElementsByTagName("DepJob").item(0).getTextContent();
-                String description = depDataElement.getElementsByTagName("Description").item(0).getTextContent();
-
-                DepData depData = new DepData(depCode, depJob, description);
-                depDataSet.add(depData);
-            }
-        } catch (ParserConfigurationException | SAXException | IOException e) {
-            logger.error("Reading data from XML error: " + e.getMessage(), e);
+            DepData depData = new DepData(depCode, depJob, description);
+            depDataSet.add(depData);
         }
 
         return depDataSet;

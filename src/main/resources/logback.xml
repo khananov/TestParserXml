@@ -12,7 +12,7 @@
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <property resource="configuration.properties"/>
-        <file>${log.file.path}/${log.file.name}.log</file>
+        <file>${log.file.path}/${log.file.name}</file>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>${log.file.path}/archived/${log.file.name}.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>

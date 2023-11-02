@@ -19,7 +19,8 @@ public class DatabaseConnectionConfiguration {
         try {
             return DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
         } catch (SQLException e) {
-            logger.error("Connection error. Url, username or password are incorrect: " + e.getMessage(), e);
+            logger.info("Connection error. Url, username or password are incorrect: " + e.getMessage(), e);
+            logger.error(String.valueOf(e));
             return null;
         }
     }
@@ -29,7 +30,8 @@ public class DatabaseConnectionConfiguration {
             try {
                 connection.close();
             } catch (SQLException e) {
-                logger.error("Closing connection error: " + e.getMessage(), e);
+                logger.info("Closing connection error: " + e.getMessage(), e);
+                logger.error(String.valueOf(e));
             }
         }
     }

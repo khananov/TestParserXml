@@ -50,7 +50,8 @@ public class DepDataExporterXmlImpl implements DataExporter {
 
             logger.info("Export data to XML file (path: " + outputFilePath + ") completed successfully");
         } catch (ParserConfigurationException | TransformerException | IOException e) {
-            logger.error("Export to XML file error: " + e.getMessage(), e);
+            logger.info("Export to XML file error: " + e.getMessage());
+            logger.error(String.valueOf(e));
         }
     }
 

@@ -2,7 +2,7 @@ package ru.khananov.dao.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.khananov.dao.CrudDao;
+import ru.khananov.dao.DepDataCrudDao;
 import ru.khananov.entity.DepData;
 
 import java.sql.Connection;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class DepDataDaoImpl implements CrudDao<DepData> {
+public class DepDataDaoImpl implements DepDataCrudDao<DepData> {
     private static final Logger logger = LoggerFactory.getLogger(DepDataDaoImpl.class);
     private final Connection connection;
 
@@ -39,10 +39,24 @@ public class DepDataDaoImpl implements CrudDao<DepData> {
                     ));
                 }
             } catch (SQLException e) {
-                logger.error("Mapping to depData error: " + e.getMessage(), e);
+                logger.error("Mapping to depData error: " + e);
             }
 
             return depDataList;
+        }
+    }
+
+    @Override
+    public Optional<DepData> findByDepCodeAndDepJob(String depCode, String depJob) {
+        String sql = "SELECT * FROM dep_data WHERE (dep_code = ? AND dep_job = ?)";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, depCode);
+            preparedStatement.setString(2, depJob);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return DepDataRowMapper.mapToDepData(resultSet).stream().findFirst();
+        } catch (SQLException e) {
+            logger.error("FindByDepCodeAndDepJob error: " + e);
+            return Optional.empty();
         }
     }
 
@@ -54,7 +68,7 @@ public class DepDataDaoImpl implements CrudDao<DepData> {
             ResultSet resultSet = preparedStatement.executeQuery();
             return DepDataRowMapper.mapToDepData(resultSet).stream().findFirst();
         } catch (SQLException e) {
-            logger.error("FindById error: " + e.getMessage(), e);
+            logger.error("FindById error: " + e);
             return Optional.empty();
         }
     }
@@ -66,7 +80,7 @@ public class DepDataDaoImpl implements CrudDao<DepData> {
             ResultSet resultSet = preparedStatement.executeQuery();
             return DepDataRowMapper.mapToDepData(resultSet);
         } catch (SQLException e) {
-            logger.error("FindAll error: " + e.getMessage(), e);
+            logger.error("FindAll error: " + e);
             return new ArrayList<>();
         }
     }
@@ -80,7 +94,7 @@ public class DepDataDaoImpl implements CrudDao<DepData> {
             preparedStatement.setString(3, entity.getDescription());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.error("Save error: " + e.getMessage(), e);
+            logger.error("Save entity error: " + e);
         }
     }
 
@@ -92,7 +106,7 @@ public class DepDataDaoImpl implements CrudDao<DepData> {
             preparedStatement.setLong(2, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.error("Update error: " + e.getMessage(), e);
+            logger.error("Update entity error: " + e);
         }
     }
 
@@ -103,7 +117,7 @@ public class DepDataDaoImpl implements CrudDao<DepData> {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.error("Delete error: " + e.getMessage(), e);
+            logger.error("Delete error: " + e);
         }
     }
 }
