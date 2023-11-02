@@ -22,12 +22,12 @@ Before running the application, you need to follow these steps:
 $ mvn clean package
 ```
 
-3. Create a database. Create and populate a table using the script init_db.sql, located in the src/main/resources folder.
+3. Create a database. Create and populate a table using the script init_db.sql, located in the ./scripts/sql folder.
 4. Configure logging and database connection parameters in the application's configuration file - configuration.properties, located in the src/main/resources folder.
 
 ### Running the Application
 
-The application should be executed from the command line, specifying the function to be performed and the XML file name:
+The application should be executed from the command line (or use scripts in ./scripts folder), specifying the function to be performed and the XML file name:
 
 1. **Exporting Data to an XML File:**
    
