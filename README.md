@@ -22,7 +22,7 @@ Before running the application, you need to follow these steps:
 $ mvn clean package
 ```
 
-3. Create a database. Create and populate a table using the script init-db.sql, located in the src/main/resources folder.
+3. Create a database. Create and populate a table using the script init_db.sql, located in the src/main/resources folder.
 4. Configure logging and database connection parameters in the application's configuration file - configuration.properties, located in the src/main/resources folder.
 
 ### Running the Application
