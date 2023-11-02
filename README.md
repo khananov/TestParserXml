@@ -48,5 +48,5 @@ java -jar TestParserXml-1.0.jar sync data.xml
 Assuming you're in the root directory, just run:
 ```bash
 $ mvn clean package
-$ dockerfile build
+$ docker build -t parser .
 ```
