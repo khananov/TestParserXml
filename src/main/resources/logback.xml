@@ -1,9 +1,9 @@
 <configuration debug="true">
-<!--    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">-->
-<!--        <encoder>-->
-<!--            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
-<!--        </encoder>-->
-<!--    </appender>-->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%date [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
 
     <appender name="FILE-ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <property resource="configuration.properties"/>
@@ -17,19 +17,23 @@
         </rollingPolicy>
 
         <encoder>
-            <pattern>%d %p %c{1} [%t] %m%n</pattern>
+            <pattern>%date [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <logger name="ru.khananov" level="debug" additivity="false">
+<!--    <logger name="ru.khananov" level="debug" additivity="false">-->
+<!--        <appender-ref ref="FILE-ROLLING"/>-->
+<!--    </logger>-->
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+    <logger name="ru.khananov" level="error">
         <appender-ref ref="FILE-ROLLING"/>
     </logger>
 
-    <root level="error">
-        <appender-ref ref="FILE-ROLLING"/>
-    </root>
-
-<!--    <root level="debug">-->
-<!--        <appender-ref ref="STDOUT" />-->
-<!--    </root>-->
+    <logger name="ru.khananov" level="INFO" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
 </configuration>
