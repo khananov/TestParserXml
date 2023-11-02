@@ -17,17 +17,17 @@ Before running the application, you need to follow these steps:
 
 1. Ensure that you have JDK 17 installed.
 
-2. Unzip the project and package it using Maven. Assuming you're in the root directory and execute the following command:
+2. Unzip the project and package it using Maven. Assuming you're in the root directory and execute the following command (or use scripts in ./scripts folder):
 ```bash
 $ mvn clean package
 ```
 
-3. Create a database. Create and populate a table using the script init-db.sql, located in the src/main/resources folder.
+3. Create a database. Create and fill a table using the script init_db.sql, located in the ./scripts/sql folder.
 4. Configure logging and database connection parameters in the application's configuration file - configuration.properties, located in the src/main/resources folder.
 
 ### Running the Application
 
-The application should be executed from the command line, specifying the function to be performed and the XML file name:
+The application should be executed from the command line (or use scripts in ./scripts folder), specifying the function to be performed and the XML file name:
 
 1. **Exporting Data to an XML File:**
    
@@ -45,8 +45,19 @@ java -jar TestParserXml-1.0.jar sync data.xml
 ***
 
 ## For Deployment With Docker
+Create a PostgreSQL database in Docker and configure the connection to it in configuration.properties.
 Assuming you're in the root directory, just run:
+
+1. **Exporting Data to an XML File:**
 ```bash
 $ mvn clean package
 $ docker build -t parser .
+$ docker run parser function=export filename=data.xml
+```
+
+2. **Synchronizing Data with an XML File:**
+```bash
+$ mvn clean package
+$ docker build -t parser .
+$ docker run parser function=sync filename=data.xml
 ```
