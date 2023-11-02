@@ -23,8 +23,9 @@ public class Main {
             logger.info("Usage: java -jar TestParserXml-1.0.jar <function> <xmlFileName.xml>");
             return;
         }
+
         String command = args[0];
-        String xmlFileName = args[0];
+        String xmlFileName = args[1];
 
         Connection connection = DatabaseConnectionConfiguration.getConnection("configuration.properties");
         CrudDao<DepData> depDataCrudDao = new DepDataDaoImpl(connection);
