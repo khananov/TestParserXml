@@ -2,7 +2,8 @@ package ru.khananov;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.khananov.configuration.DatabaseConnectionConfiguration;
+import ru.khananov.jdbc.TransactionManager;
+import ru.khananov.jdbc.impl.DatabaseConnection;
 import ru.khananov.dao.DepDataCrudDao;
 import ru.khananov.dao.impl.DepDataDaoImpl;
 import ru.khananov.dataparser.DataExporter;
@@ -10,6 +11,7 @@ import ru.khananov.dataparser.DataSynchronizer;
 import ru.khananov.dataparser.impl.DepDataExporterXmlImpl;
 import ru.khananov.dataparser.impl.DepDataSynchronizerXmlImpl;
 import ru.khananov.entity.DepData;
+import ru.khananov.jdbc.impl.TransactionManagerImpl;
 import ru.khananov.services.DepDataService;
 import ru.khananov.services.impl.DepDataServiceImpl;
 
@@ -27,18 +29,19 @@ public class Main {
         String command = args[0];
         String xmlFile = args[1];
 
-        Connection connection = DatabaseConnectionConfiguration.getConnection("configuration.properties");
-        DepDataCrudDao<DepData> depDataCrudDao = new DepDataDaoImpl(connection);
+        Connection connection = DatabaseConnection.getConnection("configuration.properties");
+        TransactionManager transactionManager = new TransactionManagerImpl(connection);
+        DepDataCrudDao<DepData> depDataCrudDao = new DepDataDaoImpl(connection, transactionManager);
         DepDataService depDataService = new DepDataServiceImpl(depDataCrudDao);
 
         if (command.equals("export")) {
             DataExporter dataExporterXml = new DepDataExporterXmlImpl(depDataService);
             dataExporterXml.exportData(xmlFile);
         } else if (command.equals("sync")) {
-            DataSynchronizer dataSynchronizerXml = new DepDataSynchronizerXmlImpl(depDataService);
+            DataSynchronizer dataSynchronizerXml = new DepDataSynchronizerXmlImpl(transactionManager, depDataService);
             dataSynchronizerXml.synchronizeData(xmlFile);
         }
 
-        DatabaseConnectionConfiguration.closeConnection(connection);
+        DatabaseConnection.closeConnection(connection);
     }
 }

@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.khananov.dao.DepDataCrudDao;
 import ru.khananov.entity.DepData;
+import ru.khananov.jdbc.TransactionManager;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,9 +17,11 @@ import java.util.Optional;
 public class DepDataDaoImpl implements DepDataCrudDao<DepData> {
     private static final Logger logger = LoggerFactory.getLogger(DepDataDaoImpl.class);
     private final Connection connection;
+    private final TransactionManager transactionManager;
 
-    public DepDataDaoImpl(Connection connection) {
+    public DepDataDaoImpl(Connection connection, TransactionManager transactionManager) {
         this.connection = connection;
+        this.transactionManager = transactionManager;
     }
 
     private static class DepDataRowMapper {
@@ -55,6 +58,7 @@ public class DepDataDaoImpl implements DepDataCrudDao<DepData> {
             ResultSet resultSet = preparedStatement.executeQuery();
             return DepDataRowMapper.mapToDepData(resultSet).stream().findFirst();
         } catch (SQLException e) {
+            transactionManager.rollback();
             logger.error("FindByDepCodeAndDepJob error: " + e);
             return Optional.empty();
         }
@@ -68,6 +72,7 @@ public class DepDataDaoImpl implements DepDataCrudDao<DepData> {
             ResultSet resultSet = preparedStatement.executeQuery();
             return DepDataRowMapper.mapToDepData(resultSet).stream().findFirst();
         } catch (SQLException e) {
+            transactionManager.rollback();
             logger.error("FindById error: " + e);
             return Optional.empty();
         }
@@ -80,6 +85,7 @@ public class DepDataDaoImpl implements DepDataCrudDao<DepData> {
             ResultSet resultSet = preparedStatement.executeQuery();
             return DepDataRowMapper.mapToDepData(resultSet);
         } catch (SQLException e) {
+            transactionManager.rollback();
             logger.error("FindAll error: " + e);
             return new ArrayList<>();
         }
@@ -94,6 +100,7 @@ public class DepDataDaoImpl implements DepDataCrudDao<DepData> {
             preparedStatement.setString(3, entity.getDescription());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
+            transactionManager.rollback();
             logger.error("Save entity error: " + e);
         }
     }
@@ -106,6 +113,7 @@ public class DepDataDaoImpl implements DepDataCrudDao<DepData> {
             preparedStatement.setLong(2, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
+            transactionManager.rollback();
             logger.error("Update entity error: " + e);
         }
     }
@@ -117,6 +125,7 @@ public class DepDataDaoImpl implements DepDataCrudDao<DepData> {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
+            transactionManager.rollback();
             logger.error("Delete error: " + e);
         }
     }

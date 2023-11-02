@@ -1,14 +1,15 @@
-package ru.khananov.configuration;
+package ru.khananov.jdbc.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.khananov.configuration.AppConfiguration;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DatabaseConnectionConfiguration {
-    private static final Logger logger = LoggerFactory.getLogger(DatabaseConnectionConfiguration.class);
+public class DatabaseConnection {
+    private static final Logger logger = LoggerFactory.getLogger(DatabaseConnection.class);
 
     public static Connection getConnection(String configFilePath) {
         AppConfiguration.loadConfig(configFilePath);

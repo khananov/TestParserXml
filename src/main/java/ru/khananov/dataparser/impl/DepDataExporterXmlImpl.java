@@ -41,7 +41,7 @@ public class DepDataExporterXmlImpl implements DataExporter {
             document.appendChild(rootElement);
 
             List<DepData> depDataList = depDataService.getAll();
-            parseData(document, rootElement, depDataList);
+            parseDataToXml(document, rootElement, depDataList);
 
             TransformerFactory tf = TransformerFactory.newInstance();
             Transformer transformer = tf.newTransformer();
@@ -55,7 +55,7 @@ public class DepDataExporterXmlImpl implements DataExporter {
         }
     }
 
-    private void parseData(Document document, Element rootElement, List<DepData> depDataList) {
+    private void parseDataToXml(Document document, Element rootElement, List<DepData> depDataList) {
         depDataList.forEach(depData -> {
             Element row = document.createElement("Row");
             rootElement.appendChild(row);
