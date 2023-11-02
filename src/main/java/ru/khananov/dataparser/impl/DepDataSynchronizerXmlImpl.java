@@ -15,9 +15,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class DepDataSynchronizerXmlImpl implements DataSynchronizer {
@@ -31,8 +29,8 @@ public class DepDataSynchronizerXmlImpl implements DataSynchronizer {
     @Override
     public void synchronizeData(String inputFilePath) {
         try {
-            List<DepData> xmlData = readDataFromXML(inputFilePath);
-            List<DepData> dbData = depDataService.getAll();
+            Set<DepData> xmlData = readDataFromXML(inputFilePath);
+            Set<DepData> dbData = new HashSet<>(depDataService.getAll());
             synchronization(dbData, xmlData);
 
             logger.info("Data synchronization completed successfully.");
@@ -41,8 +39,8 @@ public class DepDataSynchronizerXmlImpl implements DataSynchronizer {
         }
     }
 
-    private List<DepData> readDataFromXML(String xmlFilePath) {
-        List<DepData> depDataList = new ArrayList<>();
+    private Set<DepData> readDataFromXML(String xmlFilePath) {
+        Set<DepData> depDataSet = new HashSet<>();
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -57,25 +55,19 @@ public class DepDataSynchronizerXmlImpl implements DataSynchronizer {
                 String depJob = depDataElement.getElementsByTagName("DepJob").item(0).getTextContent();
                 String description = depDataElement.getElementsByTagName("Description").item(0).getTextContent();
 
-                DepData depData = new DepData();
-                depData.setDepCode(depCode);
-                depData.setDepJob(depJob);
-                depData.setDescription(description);
-                depDataList.add(depData);
+                DepData depData = new DepData(depCode, depJob, description);
+                depDataSet.add(depData);
             }
         } catch (ParserConfigurationException | SAXException | IOException e) {
             logger.error("Reading data from XML error: " + e.getMessage(), e);
         }
 
-        return depDataList;
+        return depDataSet;
     }
 
-    private void synchronization(List<DepData> dbData, List<DepData> xmlData) {
-        Set<DepData> xmlDataSet = new HashSet<>(xmlData);
-        Set<DepData> dbDataSet = new HashSet<>(dbData);
-
+    private void synchronization(Set<DepData> dbData, Set<DepData> xmlData) {
         for (DepData xmlDepData : xmlData) {
-            if (dbDataSet.contains(xmlDepData)) {
+            if (dbData.contains(xmlDepData)) {
                 DepData dbDepData = findMatchingData(dbData, xmlDepData);
                 if (dbDepData != null) {
                     dbDepData.setDescription(xmlDepData.getDescription());
@@ -87,13 +79,13 @@ public class DepDataSynchronizerXmlImpl implements DataSynchronizer {
         }
 
         for (DepData dbDepData : dbData) {
-            if (!xmlDataSet.contains(dbDepData)) {
+            if (!xmlData.contains(dbDepData)) {
                 depDataService.deleteById(dbDepData.getId());
             }
         }
     }
 
-    private DepData findMatchingData(List<DepData> dbData, DepData xmlDepData) {
+    private DepData findMatchingData(Set<DepData> dbData, DepData xmlDepData) {
         for (DepData dbDepData : dbData) {
             if (dbDepData.getDepCode().equals(xmlDepData.getDepCode())
                     && dbDepData.getDepJob().equals(xmlDepData.getDepJob())) {

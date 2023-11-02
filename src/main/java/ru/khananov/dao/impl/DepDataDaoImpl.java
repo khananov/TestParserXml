@@ -31,12 +31,12 @@ public class DepDataDaoImpl implements CrudDao<DepData> {
             List<DepData> depDataList = new ArrayList<>();
             try {
                 while (resultSet.next()) {
-                    DepData depData = new DepData();
-                    depData.setId(resultSet.getLong("id"));
-                    depData.setDepCode(resultSet.getString("dep_code"));
-                    depData.setDepJob(resultSet.getString("dep_job"));
-                    depData.setDescription(resultSet.getString("description"));
-                    depDataList.add(depData);
+                    depDataList.add(new DepData(
+                            resultSet.getLong("id"),
+                            resultSet.getString("dep_code"),
+                            resultSet.getString("dep_job"),
+                            resultSet.getString("description")
+                    ));
                 }
             } catch (SQLException e) {
                 logger.error("Mapping to depData error: " + e.getMessage(), e);

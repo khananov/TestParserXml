@@ -11,6 +11,12 @@ public class DepData {
     public DepData() {
     }
 
+    public DepData(String depCode, String depJob, String description) {
+        this.depCode = depCode;
+        this.depJob = depJob;
+        this.description = description;
+    }
+
     public DepData(Long id, String depCode, String depJob, String description) {
         this.id = id;
         this.depCode = depCode;

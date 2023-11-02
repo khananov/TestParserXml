@@ -19,18 +19,26 @@ public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
+        if (args.length < 2) {
+            logger.info("Usage: java -jar TestParserXml-1.0.jar <function> <xmlFileName.xml>");
+            return;
+        }
+        String command = args[0];
+        String xmlFileName = args[0];
+
         Connection connection = DatabaseConnectionConfiguration.getConnection("configuration.properties");
         CrudDao<DepData> depDataCrudDao = new DepDataDaoImpl(connection);
         DepDataService depDataService = new DepDataServiceImpl(depDataCrudDao);
-        DataExporter dataExporterXml = new DepDataExporterXmlImpl(depDataService);
-        DataSynchronizer dataSynchronizerXml = new DepDataSynchronizerXmlImpl(depDataService);
 
-//        dataExporterXml.exportData("exportData.xml");
-        dataSynchronizerXml.synchronizeData("exportData.xml");
+        if (command.equals("export")) {
+            DataExporter dataExporterXml = new DepDataExporterXmlImpl(depDataService);
+            dataExporterXml.exportData(xmlFileName);
+        } else if (command.equals("sync")) {
+            DataSynchronizer dataSynchronizerXml = new DepDataSynchronizerXmlImpl(depDataService);
+            dataSynchronizerXml.synchronizeData(xmlFileName);
+        }
 
         DatabaseConnectionConfiguration.closeConnection(connection);
 
-//        String command = args[0];
-//        String filename = args[1];
     }
 }
