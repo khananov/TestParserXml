@@ -1,5 +1,3 @@
-CREATE DATABASE parser;
-
 CREATE TABLE dep_data (
     id SERIAL PRIMARY KEY,
     dep_code varchar(20) NOT NULL,
