@@ -15,12 +15,12 @@ Java 17, Maven 3, JDBC, Postgresql, Logback, Docker
 
 ### Before Running the Application
 
-Before running the application, you need to follow these steps:
+You need to follow these steps:
 
 1. Ensure that you have JDK 17 and Maven 3 installed.
 2. Unzip the project. 
 3. Create a database using PostgreSQL. Create and fill a table using the script *init_db.sql*, located in the *./scripts/sql* folder.
-4. Configure logging and database connection parameters in *configuration.properties*, located in the *src/main/resources* folder.
+4. Configure logging and database connection parameters in *configuration.properties*, located in the *./src/main/resources* folder.
 5. Assuming you're in the root directory and execute the following command (or use scripts in *./scripts* folder):
 ```bash
 $ mvn clean package
