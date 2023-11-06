@@ -17,11 +17,10 @@ Java 17, Maven 3, JDBC, Postgresql, Logback, Docker
 
 Before running the application, you need to follow these steps:
 
-1. Ensure that you have JDK 17 and Maven 3 installed.
-2. Unzip the project. 
-3. Create a database using PostgreSQL. Create and fill a table using the script *init_db.sql*, located in the *./scripts/sql* folder.
-4. Configure logging and database connection parameters in *configuration.properties*, located in the *src/main/resources* folder.
-5. Assuming you're in the root directory and execute the following command (or use scripts in *./scripts* folder):
+1. Ensure that you have JDK 17 and Maven 3 installed. 
+2. Create a database using PostgreSQL. Create and fill a table using the script *init_db.sql*, located in the *./scripts/sql* folder.
+3. Configure logging and database connection parameters in *configuration.properties*, located in the *src/main/resources* folder.
+4. Assuming you're in the root directory and execute the following command (or use scripts in *./scripts* folder):
 ```bash
 $ mvn clean package
 ```
@@ -40,6 +39,35 @@ java -jar TestParserXml-1.0.jar export data.xml
 ```bash
 java -jar TestParserXml-1.0.jar sync data.xml
 ```
+
+***
+
+## For Deployment With Docker compose
+
+### Before Running the Application
+
+You need to follow these steps:
+
+1. In the *configuration.properties* file, located in the *src/main/resources* folder, 
+set the value of db.url to jdbc:postgresql://db:5432/parser
+2. In the *docker-compose.yaml* file, located in the project's root folder,
+specify the required command ('export' or 'sync') and the XML filename in the *command* parameter.
+3. Assuming you're in the root directory and execute the following command (or use scripts in *./scripts* folder):
+```bash
+$ mvn clean package
+```
+
+### Running the Application
+
+By default, when using the *export* command, the XML file will be copied to the 'output' folder at the project's root.
+When using the 'sync' command, the XML file from the 'output' folder at the project's root is copied into the container,
+and the application synchronizes the database.
+
+Assuming you're in the root directory, just run:
+```bash
+$ docker compose up
+```
+
 ***
 
 ## For Deployment With Docker
